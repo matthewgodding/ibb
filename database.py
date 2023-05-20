@@ -4,6 +4,7 @@ from constants import (
     DATA_STORE_PATH,
     SQL_CREATE_TRANSACTION_TABLE,
     SQL_INSERT_TRANSACTIONS,
+    SQLITE_DATABASE_NAME,
 )
 
 
@@ -15,7 +16,7 @@ def read_sql_file(sql_file):
 
 
 def write_transactions(transactions):
-    con = connect(join(DATA_STORE_PATH, "bb.sqlite"))
+    con = connect(join(DATA_STORE_PATH, SQLITE_DATABASE_NAME))
 
     cur = con.cursor()
 

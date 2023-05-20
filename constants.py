@@ -12,5 +12,7 @@ TRANSACTION_NAMES_UNKNOWN_FILENAME = "transaction-names-unknown.txt"
 TRANSACTION_NAMES_MAPPING_FILENAME = "transaction-names-mapping.csv"
 BUDGETS_FILENAME = "budgets.csv"
 
+SQLITE_DATABASE_NAME = "ibb.sqlite"
+
 SQL_CREATE_TRANSACTION_TABLE = "create_transactions_table.sql"
 SQL_INSERT_TRANSACTIONS = "insert_transactions.sql"
