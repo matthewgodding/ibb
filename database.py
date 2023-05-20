@@ -25,13 +25,14 @@ def write_transactions(transactions):
     for transaction in transactions:
         cur.execute(
             read_sql_file(SQL_INSERT_TRANSACTIONS),
+            # transaction
             [
                 transaction.trntype,
-                # transaction.dtposted,
-                # transaction.trnamt,
-                # transaction.fitid,
+                transaction.dtposted,
+                int(transaction.trnamt),
+                transaction.fitid,
                 transaction.name,
-                # transaction.category,
+                transaction.category,
             ],
         )
 

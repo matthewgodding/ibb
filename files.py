@@ -46,7 +46,9 @@ def read_ofx_transactions_file():
 def read_transaction_name_to_category_mappings():
     transaction_mapping_names = []
 
-    with open(TRANSACTION_NAMES_MAPPING_FILENAME, "r") as f:
+    with open(
+        path.join(TRANSACTIONS_FILES_PATH, TRANSACTION_NAMES_MAPPING_FILENAME), "r"
+    ) as f:
         csv_reader = csv.reader(f)
         for row in csv_reader:
             new_name_mapping = transaction_mapping_name(row[0], row[1])
@@ -64,7 +66,7 @@ def write_unknown_categories(transaction_unknown_names):
 def read_budgets():
     budgets = []
 
-    with open(BUDGETS_FILENAME, "r") as f:
+    with open(path.join(BUDGETS_FILES_PATH, BUDGETS_FILENAME), "r") as f:
         csv_reader = csv.reader(f)
         for row in csv_reader:
             new_budget = budget(

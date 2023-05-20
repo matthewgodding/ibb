@@ -1,9 +1,9 @@
 CREATE TABLE
     IF NOT EXISTS transactions (
-        trntype,
-        -- dtposted,
-        -- trnamt,
-        -- fitid,
-        name
-        -- category
+        trntype TEXT,
+        dtposted TEXT,
+        trnamt INTEGER,
+        fitid INTEGER,
+        [name] TEXT,
+        category TEXT
     )
