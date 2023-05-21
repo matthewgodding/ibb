@@ -1,9 +1,9 @@
-- specify filename
 - uniquely identify each transaction
 - ignore duplicate imported transactions
 - unit tests for input file operations
 - unit tests for sqlite operations
 - simple command line interface
+- specify filename
 - store budget by month in sqlite
 - store transactions maps in sqlite
 - store unknown transactions in sqlite
