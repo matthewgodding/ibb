@@ -16,3 +16,4 @@ SQLITE_DATABASE_NAME = "ibb.sqlite"
 
 SQL_CREATE_TRANSACTION_TABLE = "create_transactions_table.sql"
 SQL_INSERT_TRANSACTIONS = "insert_transactions.sql"
+SQL_TRANSACTION_UNIQUE_FITID = "select_transaction_unique_fitid.sql"

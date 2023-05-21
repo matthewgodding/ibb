@@ -1,0 +1,1 @@
+SELECT fitid FROM transactions WHERE fitid = ?

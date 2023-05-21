@@ -19,15 +19,17 @@ def map_categories(ofx, transaction_mapping_names):
         if category is None:
             transaction_unknown_names.append(transaction.name)
 
-        new_transaction = statement_transaction(
-            transaction.trntype,
-            transaction.dtposted,
-            transaction.trnamt,
-            transaction.fitid,
-            transaction.name,
-            category,
-        )
-        transactions.append(new_transaction)
+
+        if database.transaction_unique(transaction.fitid): 
+            new_transaction = statement_transaction(
+                transaction.trntype,
+                transaction.dtposted,
+                transaction.trnamt,
+                transaction.fitid,
+                transaction.name,
+                category,
+            )
+            transactions.append(new_transaction)
 
     files.write_unknown_categories(transaction_unknown_names)
 

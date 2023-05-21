@@ -5,6 +5,7 @@ from constants import (
     SQL_CREATE_TRANSACTION_TABLE,
     SQL_INSERT_TRANSACTIONS,
     SQLITE_DATABASE_NAME,
+    SQL_TRANSACTION_UNIQUE_FITID,
 )
 
 
@@ -39,3 +40,13 @@ def write_transactions(transactions):
         )
 
     con.commit()
+
+def transaction_unique(fitid):
+    con = connect(join(DATA_STORE_PATH, SQLITE_DATABASE_NAME))
+    cur = con.cursor()
+    try:
+        res = cur.execute(read_sql_file(SQL_TRANSACTION_UNIQUE_FITID), [fitid])
+    except:
+        return True
+    if res.fetchone() is None:
+        return True
