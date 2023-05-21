@@ -34,9 +34,9 @@ def validate_folder_structure():
         mkdir(BUDGETS_FILES_PATH)
 
 
-def read_ofx_transactions_file():
+def read_ofx_transactions_file(ofx_file):
     parser = OFXTree()
-    with open(path.join(INPUT_FILES_PATH, TRANSACTIONS_INPUT_FILENAME), "rb") as f:
+    with open(ofx_file, "rb") as f:
         parser.parse(f)
 
     ofx = parser.convert()

@@ -1,7 +1,7 @@
 from os import path
 from pathlib import Path
 
-DATA_STORE_PATH = path.join(Path.home(), "dev/ibb/ibb")
+DATA_STORE_PATH = path.join(Path.home(), "repos/ibb/ibb")
 INPUT_FILES_PATH = path.join(DATA_STORE_PATH, "10 - InputFiles")
 TRANSACTIONS_FILES_PATH = path.join(DATA_STORE_PATH, "20 - Transactions")
 BUDGETS_FILES_PATH = path.join(path.join(DATA_STORE_PATH, "30 - Budgets"))

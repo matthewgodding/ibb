@@ -1,7 +1,9 @@
 from decimal import Decimal
+from os import path
 
 import files, database
 from data_classes import statement_transaction
+from constants import INPUT_FILES_PATH, TRANSACTIONS_INPUT_FILENAME
 
 
 def map_category(name, transaction_mapping_names):
@@ -19,8 +21,7 @@ def map_categories(ofx, transaction_mapping_names):
         if category is None:
             transaction_unknown_names.append(transaction.name)
 
-
-        if database.transaction_unique(transaction.fitid): 
+        if database.transaction_unique(transaction.fitid):
             new_transaction = statement_transaction(
                 transaction.trntype,
                 transaction.dtposted,
@@ -62,7 +63,8 @@ def calculate_budgets(transactions):
 if __name__ == "__main__":
     files.validate_folder_structure()
 
-    ofx_data = files.read_ofx_transactions_file()
+    input_file = path.join(INPUT_FILES_PATH, TRANSACTIONS_INPUT_FILENAME)
+    ofx_data = files.read_ofx_transactions_file(input_file)
 
     transaction_name_to_category_mappings = (
         files.read_transaction_name_to_category_mappings()

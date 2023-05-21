@@ -26,9 +26,8 @@ def write_transactions(transactions):
     INSERT_STATEMENT = read_sql_file(SQL_INSERT_TRANSACTIONS)
 
     for transaction in transactions:
-        cur.execute(INSERT_STATEMENT
-            ,
-            # transaction
+        cur.execute(
+            INSERT_STATEMENT,
             [
                 transaction.trntype,
                 transaction.dtposted,
@@ -40,6 +39,7 @@ def write_transactions(transactions):
         )
 
     con.commit()
+
 
 def transaction_unique(fitid):
     con = connect(join(DATA_STORE_PATH, SQLITE_DATABASE_NAME))

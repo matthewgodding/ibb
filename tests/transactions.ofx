@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><?OFX OFXHEADER="200" VERSION="203" SECURITY="NONE" OLDFILEUID="NONE" NEWFILEUID="NONE"?>
+<OFX>
+    <SIGNONMSGSRSV1>
+        <SONRS>
+            <STATUS>
+                <CODE>0</CODE>
+                <SEVERITY>INFO</SEVERITY>
+            </STATUS>
+            <DTSERVER>20230509012156.951[+1]</DTSERVER>
+            <LANGUAGE>ENG</LANGUAGE>
+        </SONRS>
+    </SIGNONMSGSRSV1>
+    <CREDITCARDMSGSRSV1>
+        <CCSTMTTRNRS>
+            <TRNUID>A</TRNUID>
+            <STATUS>
+                <CODE>0</CODE>
+                <SEVERITY>INFO</SEVERITY>
+            </STATUS>
+            <CCSTMTRS>
+                <CURDEF>GBP</CURDEF>
+                <CCACCTFROM>
+                    <ACCTID>****1234</ACCTID>
+                </CCACCTFROM>
+                <BANKTRANLIST>
+                    <DTSTART>20230421120000.000[+1]</DTSTART>
+                    <DTEND>20230509120000.000[+1]</DTEND>
+                    <STMTTRN>
+                        <TRNTYPE>DEBIT</TRNTYPE>
+                        <DTPOSTED>20230421120000.000[+1]</DTPOSTED>
+                        <TRNAMT>-17.50</TRNAMT>
+                        <FITID>101010001120000</FITID>
+                        <NAME>TEST DEBIT</NAME>
+                    </STMTTRN>
+                    <STMTTRN>
+                        <TRNTYPE>CREDIT</TRNTYPE>
+                        <DTPOSTED>20230505120000.000[+1]</DTPOSTED>
+                        <TRNAMT>200.00</TRNAMT>
+                        <FITID>7001010001120000</FITID>
+                        <NAME>TEST CREDIT</NAME>
+                    </STMTTRN>
+                </BANKTRANLIST>
+                <LEDGERBAL>
+                    <BALAMT>-1234.56</BALAMT>
+                    <DTASOF>20230509120000.000[+1]</DTASOF>
+                </LEDGERBAL>
+                <AVAILBAL>
+                    <BALAMT>78.90</BALAMT>
+                    <DTASOF>20230509120000.000[+1]</DTASOF>
+                </AVAILBAL>
+            </CCSTMTRS>
+        </CCSTMTTRNRS>
+    </CREDITCARDMSGSRSV1>
+</OFX>
