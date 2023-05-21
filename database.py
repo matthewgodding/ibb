@@ -22,9 +22,11 @@ def write_transactions(transactions):
 
     cur.execute(read_sql_file(SQL_CREATE_TRANSACTION_TABLE))
 
+    INSERT_STATEMENT = read_sql_file(SQL_INSERT_TRANSACTIONS)
+
     for transaction in transactions:
-        cur.execute(
-            read_sql_file(SQL_INSERT_TRANSACTIONS),
+        cur.execute(INSERT_STATEMENT
+            ,
             # transaction
             [
                 transaction.trntype,
