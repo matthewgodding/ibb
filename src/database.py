@@ -4,7 +4,6 @@ from constants import (
     DATA_STORE_PATH,
     SQL_CREATE_TRANSACTION_TABLE,
     SQL_INSERT_TRANSACTIONS,
-    SQLITE_DATABASE_NAME,
     SQL_TRANSACTION_UNIQUE_FITID,
 )
 
@@ -16,15 +15,19 @@ def read_sql_file(sql_file):
     return sql_statement
 
 
+def check_database(database_file_location):
+    # Create database if it doesn't exist
+    database_connection = connect(database_file_location)
+    database_cursor = database_connection.cursor()
+
+    database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTION_TABLE))
+
+
 def write_transactions(transactions):
     con = connect(join(DATA_STORE_PATH, SQLITE_DATABASE_NAME))
-
     cur = con.cursor()
 
-    cur.execute(read_sql_file(SQL_CREATE_TRANSACTION_TABLE))
-
     INSERT_STATEMENT = read_sql_file(SQL_INSERT_TRANSACTIONS)
-
     for transaction in transactions:
         cur.execute(
             INSERT_STATEMENT,
