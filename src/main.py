@@ -1,13 +1,19 @@
+from os.path import join
 from decimal import Decimal
-from os import path, join
 
-import files, database
-from data_classes import statement_transaction
+import typer
+
+import database
+import files
 from constants import (
+    DATA_STORE_PATH,
     INPUT_FILES_PATH,
-    TRANSACTIONS_INPUT_FILENAME,
     SQLITE_DATABASE_NAME,
+    TRANSACTIONS_INPUT_FILENAME,
 )
+from data_classes import statement_transaction
+
+app = typer.Typer()
 
 
 def map_category(name, transaction_mapping_names):
@@ -64,13 +70,15 @@ def calculate_budgets(transactions):
         )
 
 
-if __name__ == "__main__":
+@app.command()
+def import_transactions(ofx_file: str):
     files.validate_folder_structure()
 
-    database.create_database_if_not_exists(join(DATA_STORE_PATH, SQLITE_DATABASE_NAME))
+    database.create_database_if_not_exists(
+        join(DATA_STORE_PATH, SQLITE_DATABASE_NAME)
+    )
 
-    input_file = path.join(INPUT_FILES_PATH, TRANSACTIONS_INPUT_FILENAME)
-    ofx_data = files.read_ofx_transactions_file(input_file)
+    ofx_data = files.read_ofx_transactions_file(ofx_file)
 
     transaction_name_to_category_mappings = (
         files.read_transaction_name_to_category_mappings()
@@ -80,8 +88,28 @@ if __name__ == "__main__":
         ofx_data, transaction_name_to_category_mappings
     )
 
-    budgets = files.read_budgets()
-
     database.write_transactions(transactions_with_categories)
 
-    calculate_budgets(transactions_with_categories)
+
+if __name__ == "__main__":
+    app()
+    # files.validate_folder_structure()
+
+    # database.create_database_if_not_exists(os.join(DATA_STORE_PATH, SQLITE_DATABASE_NAME))
+
+    # input_file = path.os.join(INPUT_FILES_PATH, TRANSACTIONS_INPUT_FILENAME)
+    # ofx_data = files.read_ofx_transactions_file(input_file)
+
+    # transaction_name_to_category_mappings = (
+    #     files.read_transaction_name_to_category_mappings()
+    # )
+
+    # transactions_with_categories = map_categories(
+    #     ofx_data, transaction_name_to_category_mappings
+    # )
+
+    # budgets = files.read_budgets()
+
+    # database.write_transactions(transactions_with_categories)
+
+    # calculate_budgets(transactions_with_categories)
