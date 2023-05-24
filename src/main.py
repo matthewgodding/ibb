@@ -67,7 +67,7 @@ def calculate_budgets(transactions):
 if __name__ == "__main__":
     files.validate_folder_structure()
 
-    database.check_database(join(DATA_STORE_PATH, SQLITE_DATABASE_NAME))
+    database.create_database_if_not_exists(join(DATA_STORE_PATH, SQLITE_DATABASE_NAME))
 
     input_file = path.join(INPUT_FILES_PATH, TRANSACTIONS_INPUT_FILENAME)
     ofx_data = files.read_ofx_transactions_file(input_file)

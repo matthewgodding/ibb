@@ -15,7 +15,7 @@ def read_sql_file(sql_file):
     return sql_statement
 
 
-def check_database(database_file_location):
+def create_database_if_not_exists(database_file_location):
     # Create database if it doesn't exist
     database_connection = connect(database_file_location)
     database_cursor = database_connection.cursor()
