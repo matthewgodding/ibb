@@ -1,11 +1,13 @@
 x uniquely identify each transaction
 x ignore duplicate imported transactions
 x unit tests for input file operations
-- unit tests for sqlite operations
 - simple command line interface
 - specify filename
 - store budget by month in sqlite
 - store transactions maps in sqlite
 - store unknown transactions in sqlite
 - import multiple files
+- add readme.md
+- unit tests for sqlite operations
 - track transaction account
+- add GUI
