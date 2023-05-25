@@ -1,8 +1,8 @@
 x uniquely identify each transaction
 x ignore duplicate imported transactions
 x unit tests for input file operations
-- simple command line interface
-- specify filename
+x simple command line interface
+x specify filename
 - store budget by month in sqlite
 - store transactions maps in sqlite
 - store unknown transactions in sqlite
