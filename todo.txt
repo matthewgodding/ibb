@@ -9,5 +9,6 @@ x specify filename
 - import multiple files
 - add readme.md
 - unit tests for sqlite operations
+- package
 - track transaction account
 - add GUI
