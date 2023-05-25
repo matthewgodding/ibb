@@ -5,7 +5,9 @@ from constants import (
     SQL_CREATE_TRANSACTION_TABLE,
     SQL_INSERT_TRANSACTIONS,
     SQL_TRANSACTION_UNIQUE_FITID,
+    SQLITE_DATABASE_LOCATION,
 )
+from data_classes import statement_transaction
 
 
 def read_sql_file(sql_file):
@@ -15,16 +17,16 @@ def read_sql_file(sql_file):
     return sql_statement
 
 
-def create_database_if_not_exists(database_file_location):
+def create_database_if_not_exists():
     # Create database if it doesn't exist
-    database_connection = connect(database_file_location)
+    database_connection = connect(SQLITE_DATABASE_LOCATION)
     database_cursor = database_connection.cursor()
 
     database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTION_TABLE))
 
 
 def write_transactions(transactions):
-    con = connect(join(DATA_STORE_PATH, SQLITE_DATABASE_NAME))
+    con = connect(join(DATA_STORE_PATH, SQLITE_DATABASE_LOCATION))
     cur = con.cursor()
 
     INSERT_STATEMENT = read_sql_file(SQL_INSERT_TRANSACTIONS)
@@ -45,7 +47,7 @@ def write_transactions(transactions):
 
 
 def transaction_unique(fitid):
-    con = connect(join(DATA_STORE_PATH, SQLITE_DATABASE_NAME))
+    con = connect(join(DATA_STORE_PATH, SQLITE_DATABASE_LOCATION))
     cur = con.cursor()
     try:
         res = cur.execute(read_sql_file(SQL_TRANSACTION_UNIQUE_FITID), [fitid])
@@ -53,3 +55,18 @@ def transaction_unique(fitid):
         return True
     if res.fetchone() is None:
         return True
+
+def select_transactions(budget_year, budget_month):
+    database_connection = connect(SQLITE_DATABASE_LOCATION)
+    database_cursor = database_connection.cursor()
+
+    transactions = []
+    for result_row in database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTION_TABLE)):
+        new_transaction = statement_transaction(
+            result_row.category,
+            result_row.dtposted,
+            result_row.trnamt,
+        )
+        transactions.append(new_transaction)
+    
+    return transactions
