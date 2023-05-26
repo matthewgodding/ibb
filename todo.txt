@@ -3,12 +3,13 @@ x ignore duplicate imported transactions
 x unit tests for input file operations
 x simple command line interface
 x specify filename
-- store budget by month in sqlite
+x store budget by month in sqlite
 - store transactions maps in sqlite
 - store unknown transactions in sqlite
 - import multiple files
 - add readme.md
 - unit tests for sqlite operations
 - package
+- first release
 - track transaction account
 - add GUI
