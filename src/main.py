@@ -6,6 +6,7 @@ import typer
 import database
 import files
 from data_classes import statement_transaction
+from constants import SQLITE_DATABASE_LOCATION
 
 app = typer.Typer()
 
@@ -43,31 +44,7 @@ def map_categories(ofx, transaction_mapping_names):
 
 @app.command()
 def calculate_budgets(budget_year: int, budget_month: int):
-    database.update_budgets(budget_year, budget_month)
-
-    transactions = database.select_transactions(budget_year, budget_month)
-    budgets = files.read_budgets()
-
-    may = Decimal(0.0)
-    april = Decimal(0.0)
-
-    for transaction in transactions:
-        if transaction.category == "Groceries":
-            if transaction.dtposted.month == 5:
-                may = may + transaction.trnamt * -1
-            if transaction.dtposted.month == 4:
-                april = april + transaction.trnamt * -1
-
-    actual = Decimal(0.0)
-
-    for b in budgets:
-        if b.month == 4:
-            actual = april
-        if b.month == 5:
-            actual = may
-        print(
-            f"{b.year}, {b.month}, {b.category}, {b.amount}, {actual}, Remaining = {b.amount - actual}"
-        )
+    database.update_budgets(SQLITE_DATABASE_LOCATION, budget_year, budget_month)
 
 
 @app.command()
