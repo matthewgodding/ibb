@@ -2,10 +2,12 @@ from sqlite3 import connect
 from os.path import join
 from constants import (
     DATA_STORE_PATH,
-    SQL_CREATE_TRANSACTION_TABLE,
+    SQL_CREATE_TRANSACTIONS_TABLE,
+    SQL_CREATE_BUDGETS_TABLE,
     SQL_INSERT_TRANSACTIONS,
     SQL_TRANSACTION_UNIQUE_FITID,
     SQLITE_DATABASE_LOCATION,
+    SQL_UPDATE_BUDGETS,
 )
 from data_classes import statement_transaction
 
@@ -22,7 +24,10 @@ def create_database_if_not_exists():
     database_connection = connect(SQLITE_DATABASE_LOCATION)
     database_cursor = database_connection.cursor()
 
-    database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTION_TABLE))
+    database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTIONS_TABLE))
+    database_cursor.execute(read_sql_file(SQL_CREATE_BUDGETS_TABLE))
+    
+    database_connection.close()
 
 
 def write_transactions(transactions):
@@ -61,7 +66,7 @@ def select_transactions(budget_year, budget_month):
     database_cursor = database_connection.cursor()
 
     transactions = []
-    for result_row in database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTION_TABLE)):
+    for result_row in database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTIONS_TABLE)):
         new_transaction = statement_transaction(
             result_row.category,
             result_row.dtposted,
@@ -70,3 +75,9 @@ def select_transactions(budget_year, budget_month):
         transactions.append(new_transaction)
     
     return transactions
+
+def update_budgets(sqlite_database_location, budget_year, budget_month):
+    database_connection = connect(sqlite_database_location)
+    database_cursor = database_connection.cursor()
+    database_cursor.execute(read_sql_file(SQL_UPDATE_BUDGETS), [budget_year, budget_month])
+    database_connection.close()

@@ -43,6 +43,8 @@ def map_categories(ofx, transaction_mapping_names):
 
 @app.command()
 def calculate_budgets(budget_year: int, budget_month: int):
+    database.update_budgets(budget_year, budget_month)
+
     transactions = database.select_transactions(budget_year, budget_month)
     budgets = files.read_budgets()
 

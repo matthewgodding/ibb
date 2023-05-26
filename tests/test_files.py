@@ -10,6 +10,7 @@ def test_read_ofx_transactions_file_count_of_transactions():
 
     assert len(ofx_object.statements[0].transactions) == 2
 
+
 def test_read_ofx_transactions_file_transaction_data():
     input_file = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "transactions.ofx"
