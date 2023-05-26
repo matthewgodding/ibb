@@ -20,4 +20,4 @@ WHERE
     AND budget_month = t.transaction_month
     AND budget_sub_category = t.category
     AND budget_year = ?
-    AND budget_month = ?
+    AND budget_month = ?;

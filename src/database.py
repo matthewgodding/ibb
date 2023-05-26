@@ -80,4 +80,5 @@ def update_budgets(sqlite_database_location, budget_year, budget_month):
     database_connection = connect(sqlite_database_location)
     database_cursor = database_connection.cursor()
     database_cursor.execute(read_sql_file(SQL_UPDATE_BUDGETS), [budget_year, budget_month])
+    database_connection.commit()
     database_connection.close()
