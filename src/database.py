@@ -4,6 +4,7 @@ from constants import (
     DATA_STORE_PATH,
     SQL_CREATE_TRANSACTIONS_TABLE,
     SQL_CREATE_BUDGETS_TABLE,
+    SQL_CREATE_TRANSACTION_BUDGET_MAPPING_TABLE,
     SQL_INSERT_TRANSACTIONS,
     SQL_TRANSACTION_UNIQUE_FITID,
     SQLITE_DATABASE_LOCATION,
@@ -26,17 +27,19 @@ def create_database_if_not_exists():
 
     database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTIONS_TABLE))
     database_cursor.execute(read_sql_file(SQL_CREATE_BUDGETS_TABLE))
-    
+    database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTION_BUDGET_MAPPING_TABLE))
+
+    database_connection.commit()
     database_connection.close()
 
-
-def write_transactions(transactions):
-    con = connect(join(DATA_STORE_PATH, SQLITE_DATABASE_LOCATION))
-    cur = con.cursor()
+def insert_transactions(database_location, transactions):
+    database_connection = connect(database_location)
+    database_cursor = database_connection.cursor()
 
     INSERT_STATEMENT = read_sql_file(SQL_INSERT_TRANSACTIONS)
+    changed_months = set()
     for transaction in transactions:
-        cur.execute(
+        database_cursor.execute(
             INSERT_STATEMENT,
             [
                 transaction.trntype,
@@ -44,12 +47,14 @@ def write_transactions(transactions):
                 int(transaction.trnamt),
                 transaction.fitid,
                 transaction.name,
-                transaction.category,
+                None,
             ],
         )
+        changed_months.add((transaction.dtposted.year, transaction.dtposted.month))
 
-    con.commit()
-
+    database_connection.commit()
+    database_connection.close()
+    return changed_months
 
 def transaction_unique(fitid):
     con = connect(join(DATA_STORE_PATH, SQLITE_DATABASE_LOCATION))
@@ -76,8 +81,8 @@ def select_transactions(budget_year, budget_month):
     
     return transactions
 
-def update_budgets(sqlite_database_location, budget_year, budget_month):
-    database_connection = connect(sqlite_database_location)
+def update_budgets(database_location, budget_year, budget_month):
+    database_connection = connect(database_location)
     database_cursor = database_connection.cursor()
     database_cursor.execute(read_sql_file(SQL_UPDATE_BUDGETS), [budget_year, budget_month])
     database_connection.commit()

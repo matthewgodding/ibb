@@ -17,6 +17,7 @@ SQLITE_DATABASE_LOCATION = path.join(DATA_STORE_PATH, SQLITE_DATABASE_NAME)
 
 SQL_CREATE_TRANSACTIONS_TABLE = "create_transactions_table.sql"
 SQL_CREATE_BUDGETS_TABLE = "create_budgets_table.sql"
+SQL_CREATE_TRANSACTION_BUDGET_MAPPING_TABLE = "create_transaction_budget_mapping_table.sql"
 SQL_INSERT_TRANSACTIONS = "insert_transactions.sql"
 SQL_SELECT_TRANSACTIONS = "select_transactions.sql"
 SQL_TRANSACTION_UNIQUE_FITID = "select_transaction_unique_fitid.sql"

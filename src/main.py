@@ -51,15 +51,22 @@ def calculate_budgets(budget_year: int, budget_month: int):
 def import_transactions(ofx_file: str):
     ofx_data = files.read_ofx_transactions_file(ofx_file)
 
-    transaction_name_to_category_mappings = (
-        files.read_transaction_name_to_category_mappings()
-    )
+    # write transactions
+    updated_months = database.insert_transactions(ofx_data.statements[0].banktranlist)
 
-    transactions_with_categories = map_categories(
-        ofx_data, transaction_name_to_category_mappings
-    )
+    # work out which years / months have been imported
+    # update the sub_category through mapping
 
-    database.write_transactions(transactions_with_categories)
+    # previous code .....
+    # transaction_name_to_category_mappings = (
+    #     files.read_transaction_name_to_category_mappings()
+    # )
+
+    # transactions_with_categories = map_categories(
+    #     ofx_data, transaction_name_to_category_mappings
+    # )
+
+    # database.write_transactions(transactions_with_categories)
 
 
 if __name__ == "__main__":
