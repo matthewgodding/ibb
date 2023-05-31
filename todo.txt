@@ -5,11 +5,13 @@ x simple command line interface
 x specify filename
 x store budget by month in sqlite
 - store transactions maps in sqlite
+- fix bug that's creating duplicate transactions
 - store unknown transactions in sqlite
-- import multiple files
+- improve database schema (3nf)
 - add readme.md
 - unit tests for sqlite operations
 - package
 - first release
 - track transaction account
 - add GUI
+- import multiple files

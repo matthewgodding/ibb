@@ -1,9 +1,10 @@
 CREATE TABLE
     IF NOT EXISTS transactions (
-        trntype TEXT,
-        dtposted TEXT,
-        trnamt INTEGER,
-        fitid INTEGER,
-        [name] TEXT,
-        category TEXT
+        id INTEGER PRIMARY KEY,
+        category_id INTEGER,
+        transaction_type TEXT,
+        date_posted TEXT,
+        transaction_amount INTEGER,
+        institution_id TEXT,
+        generic_name TEXT
     )

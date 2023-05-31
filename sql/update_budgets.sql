@@ -6,7 +6,7 @@ FROM
         SELECT
             strftime ("%Y", dtposted) transaction_year,
             strftime ("%m", dtposted) transaction_month,
-            category,
+            sub_category,
             SUM(trnamt) * -1 as trnamt
         FROM
             transactions
@@ -18,6 +18,6 @@ FROM
 WHERE
     budget_year = t.transaction_year
     AND budget_month = t.transaction_month
-    AND budget_sub_category = t.category
+    AND budget_sub_category = t.sub_category
     AND budget_year = ?
     AND budget_month = ?;
