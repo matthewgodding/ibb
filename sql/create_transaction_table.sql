@@ -1,5 +1,5 @@
 CREATE TABLE
-    IF NOT EXISTS transactions (
+    IF NOT EXISTS transaction (
         id INTEGER PRIMARY KEY,
         category_id INTEGER,
         transaction_type TEXT,

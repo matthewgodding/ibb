@@ -1,5 +1,5 @@
 CREATE TABLE
-    IF NOT EXISTS budgets (
+    IF NOT EXISTS budget (
         id INTEGER PRIMARY KEY
         category_id INTEGER,
         budget_year INTEGER,

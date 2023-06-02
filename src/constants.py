@@ -15,11 +15,9 @@ BUDGETS_FILENAME = "budgets.csv"
 SQLITE_DATABASE_NAME = "ibb.sqlite"
 SQLITE_DATABASE_LOCATION = path.join(DATA_STORE_PATH, SQLITE_DATABASE_NAME)
 
-SQL_CREATE_TRANSACTION_TABLE = "create_transactions_table.sql"
-SQL_CREATE_BUDGET_TABLE = "create_budgets_table.sql"
-SQL_CREATE_CATEGORY_TABLE = (
-    "create_transaction_budget_mapping_table.sql"
-)
+SQL_CREATE_TRANSACTION_TABLE = "create_transaction_table.sql"
+SQL_CREATE_BUDGET_TABLE = "create_budget_table.sql"
+SQL_CREATE_CATEGORY_TABLE = "create_category_table.sql"
 SQL_INSERT_TRANSACTION = "insert_transactions.sql"
 SQL_SELECT_TRANSACTIONS = "select_transactions.sql"
 SQL_TRANSACTION_UNIQUE_FITID = "select_transaction_unique_fitid.sql"
