@@ -3,7 +3,7 @@ SELECT
     category,
     trnamt
 FROM
-    transactions
+    [transaction]
 WHERE
     strftime ("%Y", dtposted) = ?
     AND strftime ("%m", dtposted) = ?

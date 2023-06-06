@@ -1,1 +1,1 @@
-SELECT fitid FROM transactions WHERE fitid = ?
+SELECT fitid FROM [transaction] WHERE fitid = ?

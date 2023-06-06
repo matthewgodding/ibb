@@ -52,8 +52,6 @@ def insert_transactions(database_location, transactions):
                 int(transaction.trnamt * 100),
                 transaction.fitid,
                 transaction.name,
-                None,
-                None,
             ],
         )
         changed_months.add((transaction.dtposted.year, transaction.dtposted.month))

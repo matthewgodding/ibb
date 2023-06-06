@@ -1,4 +1,4 @@
-UPDATE transactions AS t
+UPDATE [transaction] AS t
 SET
     sub_category = c.budget_sub_category
 FROM

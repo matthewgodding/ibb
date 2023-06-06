@@ -10,21 +10,34 @@ from src.files import read_ofx_transactions_file
 def test_update_budgets_calculates_correctly():
     # Arrange
     TEST_DB_FILE_LOCATION = "test_update_budgets_calculates_correctly.sqlite"
+    
+    # Always start with an empty db
+    try:
+        remove(TEST_DB_FILE_LOCATION)
+    except OSError:
+        pass
+
     database_connection = connect(TEST_DB_FILE_LOCATION)
     database_cursor = database_connection.cursor()
     create_database_if_not_exists(TEST_DB_FILE_LOCATION)
     database_cursor.execute(
         """
-        INSERT INTO transactions VALUES
-        ('DEBIT', '2023-04-19 11:00:00+00:00', -20, 101010001110000, 'My First Transaction', 'Need', 'Groceries'),
-        ('DEBIT', '2023-04-23 11:00:00+00:00', -30, 101010001120000, 'My Second Transaction', 'Need', 'Groceries'),
-        ('DEBIT', '2023-05-03 11:00:00+00:00', -10, 101010001130000, 'My Third Transaction', 'Need', 'Groceries');
+        INSERT INTO category (id, category_name) VALUES
+        (1, 'Groceries')
         """
     )
     database_cursor.execute(
-        """INSERT INTO budgets VALUES
-        (2023, 4, 'Need', 'Groceries', 1150, 0),
-        (2023, 5, 'Need', 'Groceries', 1000, 0);
+        """
+        INSERT INTO [transaction] (category_id, transaction_type, date_posted, transaction_amount, institution_id, generic_name) VALUES
+        (1, 'DEBIT', '2023-04-19 11:00:00+00:00', -20, 101010001110000, 'My First Transaction'),
+        (1, 'DEBIT', '2023-04-23 11:00:00+00:00', -30, 101010001120000, 'My Second Transaction'),
+        (1, 'DEBIT', '2023-05-03 11:00:00+00:00', -10, 101010001130000, 'My Third Transaction');
+        """
+    )
+    database_cursor.execute(
+        """INSERT INTO budget (category_id, budget_year, budget_month, budget_amount) VALUES
+        (1, 2023, 4, 1150),
+        (1, 2023, 5, 1000);
         """
     )
     database_connection.commit()
@@ -35,11 +48,9 @@ def test_update_budgets_calculates_correctly():
 
     database_connection_results = connect(TEST_DB_FILE_LOCATION)
     database_cursor_results = database_connection_results.cursor()
-    database_cursor_results.execute("SELECT budget_month, actual_amount FROM budgets;")
+    database_cursor_results.execute("SELECT budget_month, actual_amount FROM budget;")
     result_set = database_cursor_results.fetchall()
     database_connection.close()
-
-    remove(TEST_DB_FILE_LOCATION)
 
     # Assert
     for row in result_set:
@@ -48,7 +59,7 @@ def test_update_budgets_calculates_correctly():
             assert row[1] == 50
         # May's total should be 0 as we've not updated it
         if row[0] == 5:
-            assert row[1] == 0
+            assert row[1] == None
 
 def test_insert_transactions_compare_file_and_table():
     # Arrange
@@ -62,7 +73,7 @@ def test_insert_transactions_compare_file_and_table():
 
     database_connection_results = connect_to_database(TEST_DB_FILE_LOCATION)
     database_cursor_results = database_connection_results.cursor()
-    database_cursor_results.execute("SELECT trntype, dtposted, trnamt, fitid, [name], category, sub_category FROM transactions;")
+    database_cursor_results.execute("SELECT transaction_type, date_posted, transaction_amount, institution_id, generic_name, category_id FROM [transaction];")
     result_set = database_cursor_results.fetchall()
     database_connection_results.close()
 
@@ -80,4 +91,3 @@ def test_insert_transactions_compare_file_and_table():
         assert row[3] == ofx_file.statements[0].banktranlist[idx].fitid
         assert row[4] == ofx_file.statements[0].banktranlist[idx].name
         assert row[5] == None
-        assert row[6] == None

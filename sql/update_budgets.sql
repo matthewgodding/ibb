@@ -1,23 +1,23 @@
-UPDATE budgets
+UPDATE budget
 SET
-    actual_amount = t.trnamt
+    actual_amount = t.transaction_amount
 FROM
     (
         SELECT
-            strftime ("%Y", dtposted) transaction_year,
-            strftime ("%m", dtposted) transaction_month,
-            sub_category,
-            SUM(trnamt) * -1 as trnamt
+            STRFTIME ("%Y", date_posted) transaction_year,
+            CAST(STRFTIME("%m", date_posted) AS INTEGER) transaction_month,
+            category_id,
+            SUM(transaction_amount) * -1 as transaction_amount
         FROM
-            transactions
+            [transaction]
         GROUP BY
-            strftime ("%Y", dtposted),
-            strftime ("%m", dtposted),
-            category
+            STRFTIME ("%Y", date_posted),
+            CAST(STRFTIME ("%m", date_posted) AS INTEGER),
+            category_id
     ) AS t
 WHERE
     budget_year = t.transaction_year
     AND budget_month = t.transaction_month
-    AND budget_sub_category = t.sub_category
+    AND budget.category_id = t.category_id
     AND budget_year = ?
     AND budget_month = ?;
