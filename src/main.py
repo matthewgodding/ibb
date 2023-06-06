@@ -2,6 +2,7 @@ from os.path import join
 from decimal import Decimal
 
 import typer
+from prettytable import PrettyTable
 
 import database
 import files
@@ -25,6 +26,14 @@ def import_transactions(ofx_file: str):
     )
 
     database.update_category(SQLITE_DATABASE_LOCATION, inserted_months)
+
+@app.command()
+def show_transactions(transaction_year: int, transaction_month: int):
+    transactions = database.select_transactions(SQLITE_DATABASE_LOCATION, transaction_year, transaction_month)
+    transaction_table = PrettyTable()
+    transaction_table.field_names = ["ID", "Date Posted", "Name", "Amount", "Budget Category"]
+    transaction_table.add_rows(transactions)
+    print(transaction_table)
 
 
 if __name__ == "__main__":

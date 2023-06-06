@@ -9,6 +9,7 @@ x unit tests for sqlite operations
 - store transactions maps in sqlite
 - handle duplicate transaction inserts
 - store unknown transactions in sqlite
+- remove redundant files and folders
 - add readme.md
 - package
 - first release

@@ -1,2 +1,3 @@
 ofxtools~=0.9.5
 typer~=0.9.0
+prettytable~=3.7.0
