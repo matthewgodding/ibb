@@ -4,12 +4,12 @@ x unit tests for input file operations
 x simple command line interface
 x specify filename
 x store budget by month in sqlite
+x improve database schema (3nf)
+x unit tests for sqlite operations
 - store transactions maps in sqlite
-- fix bug that's creating duplicate transactions
+- handle duplicate transaction inserts
 - store unknown transactions in sqlite
-- improve database schema (3nf)
 - add readme.md
-- unit tests for sqlite operations
 - package
 - first release
 - track transaction account
