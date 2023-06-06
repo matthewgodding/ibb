@@ -153,7 +153,7 @@ def test_update_category_assigned():
     database_connection.close()
 
     # Act
-    update_category(TEST_DB_FILE_LOCATION, [(2023,4)])
+    update_category(TEST_DB_FILE_LOCATION, [("2023","4")])
 
     database_connection_results = connect(TEST_DB_FILE_LOCATION)
     database_cursor_results = database_connection_results.cursor()
@@ -162,6 +162,6 @@ def test_update_category_assigned():
     database_connection.close()
 
     # Assert
-    assert result_set[0][0] == "Groceries"
+    assert result_set[0][0] == 1
     assert result_set[1][0] == None
-    assert result_set[2][0] == "Groceries"
+    assert result_set[2][0] == 1
