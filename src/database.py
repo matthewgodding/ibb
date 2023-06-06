@@ -5,10 +5,11 @@ from constants import (
     SQL_CREATE_BUDGET_TABLE,
     SQL_CREATE_CATEGORY_TABLE,
     SQL_CREATE_TRANSACTION_TABLE,
+    SQL_CREATE_TRANSACTION_CATEGORY_TABLE,
     SQL_INSERT_TRANSACTION,
     SQL_TRANSACTION_UNIQUE_FITID,
     SQL_UPDATE_BUDGET,
-    SQL_UPDATE_SUB_CATEGORY,
+    SQL_UPDATE_CATEGORY,
     SQLITE_DATABASE_LOCATION,
 )
 from data_classes import statement_transaction
@@ -32,6 +33,7 @@ def create_database_if_not_exists(database_file=SQLITE_DATABASE_LOCATION):
     database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTION_TABLE))
     database_cursor.execute(read_sql_file(SQL_CREATE_BUDGET_TABLE))
     database_cursor.execute(read_sql_file(SQL_CREATE_CATEGORY_TABLE))
+    database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTION_CATEGORY_TABLE))
 
     database_connection.commit()
     database_connection.close()
@@ -100,11 +102,11 @@ def update_budgets(database_location, budget_year, budget_month):
     database_connection.close()
 
 
-def update_sub_category(database_location, months_to_update):
+def update_category(database_location, months_to_update):
     database_connection = connect_to_database(database_location)
     database_cursor = database_connection.cursor()
 
     for year, month in months_to_update:
-        database_cursor.execute(read_sql_file(SQL_UPDATE_SUB_CATEGORY), [year, month])
+        database_cursor.execute(read_sql_file(SQL_UPDATE_CATEGORY), [year, month])
     database_connection.commit()
     database_connection.close()
