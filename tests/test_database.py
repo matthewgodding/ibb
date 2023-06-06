@@ -3,14 +3,19 @@ from sqlite3 import connect
 from datetime import datetime
 from decimal import Decimal
 
-from src.database import update_budgets, insert_transactions, connect_to_database, create_database_if_not_exists
+from src.database import (
+    update_budgets,
+    insert_transactions,
+    connect_to_database,
+    create_database_if_not_exists,
+)
 from src.files import read_ofx_transactions_file
 
 
 def test_update_budgets_calculates_correctly():
     # Arrange
     TEST_DB_FILE_LOCATION = "test_update_budgets_calculates_correctly.sqlite"
-    
+
     # Always start with an empty db
     try:
         remove(TEST_DB_FILE_LOCATION)
@@ -61,19 +66,24 @@ def test_update_budgets_calculates_correctly():
         if row[0] == 5:
             assert row[1] == None
 
+
 def test_insert_transactions_compare_file_and_table():
     # Arrange
     TEST_DB_FILE_LOCATION = "test_insert_transactions_compare_file_and_table.sqlite"
     create_database_if_not_exists(TEST_DB_FILE_LOCATION)
 
-    ofx_file = read_ofx_transactions_file('tests/transactions.ofx')
+    ofx_file = read_ofx_transactions_file("tests/transactions.ofx")
 
     # Act
-    inserted_months = insert_transactions(TEST_DB_FILE_LOCATION, ofx_file.statements[0].banktranlist)
+    inserted_months = insert_transactions(
+        TEST_DB_FILE_LOCATION, ofx_file.statements[0].banktranlist
+    )
 
     database_connection_results = connect_to_database(TEST_DB_FILE_LOCATION)
     database_cursor_results = database_connection_results.cursor()
-    database_cursor_results.execute("SELECT transaction_type, date_posted, transaction_amount, institution_id, generic_name, category_id FROM [transaction];")
+    database_cursor_results.execute(
+        "SELECT transaction_type, date_posted, transaction_amount, institution_id, generic_name, category_id FROM [transaction];"
+    )
     result_set = database_cursor_results.fetchall()
     database_connection_results.close()
 
@@ -86,7 +96,10 @@ def test_insert_transactions_compare_file_and_table():
 
     for idx, row in enumerate(result_set):
         assert row[0] == ofx_file.statements[0].banktranlist[idx].trntype
-        assert datetime.fromisoformat(row[1]) == ofx_file.statements[0].banktranlist[idx].dtposted
+        assert (
+            datetime.fromisoformat(row[1])
+            == ofx_file.statements[0].banktranlist[idx].dtposted
+        )
         assert Decimal(row[2] / 100) == ofx_file.statements[0].banktranlist[idx].trnamt
         assert row[3] == ofx_file.statements[0].banktranlist[idx].fitid
         assert row[4] == ofx_file.statements[0].banktranlist[idx].name
