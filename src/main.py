@@ -24,10 +24,11 @@ def import_transactions(ofx_file: str):
         SQLITE_DATABASE_LOCATION, ofx_data.statements[0].banktranlist
     )
 
-    database.update_sub_category(SQLITE_DATABASE_LOCATION, inserted_months)
+    database.update_category(SQLITE_DATABASE_LOCATION, inserted_months)
 
 
 if __name__ == "__main__":
+    files.validate_folder_structure()
     database.create_database_if_not_exists()
 
     app()
