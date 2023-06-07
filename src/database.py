@@ -10,7 +10,8 @@ from constants import (
     SQL_TRANSACTION_UNIQUE_FITID,
     SQL_UPDATE_BUDGET,
     SQL_UPDATE_CATEGORY,
-    SQL_SELECT_TRANSACTIONS,
+    SQL_SELECT_TRANSACTION,
+    SQL_SELECT_BUDGET,
     SQLITE_DATABASE_LOCATION,
 )
 
@@ -74,11 +75,22 @@ def transaction_unique(financial_institution_id):
         return True
 
 
-def select_transactions(database_location, transaction_year, transaction_month):
+def select_transaction(database_location, transaction_year, transaction_month):
     database_connection = connect_to_database(database_location)
     database_cursor = database_connection.cursor()
 
-    database_cursor.execute(read_sql_file(SQL_SELECT_TRANSACTIONS), [str(transaction_year), str(transaction_month)])
+    database_cursor.execute(read_sql_file(SQL_SELECT_TRANSACTION), [str(transaction_year), str(transaction_month)])
+    result_set = database_cursor.fetchall()
+    database_connection.close()
+
+    return result_set
+
+
+def select_budget(database_location, transaction_year, transaction_month):
+    database_connection = connect_to_database(database_location)
+    database_cursor = database_connection.cursor()
+
+    database_cursor.execute(read_sql_file(SQL_SELECT_BUDGET), [str(transaction_year), str(transaction_month)])
     result_set = database_cursor.fetchall()
     database_connection.close()
 

@@ -26,11 +26,20 @@ def import_transactions(ofx_file: str):
 
 @app.command()
 def show_transactions(transaction_year: int, transaction_month: int):
-    transactions = database.select_transactions(SQLITE_DATABASE_LOCATION, transaction_year, transaction_month)
+    transactions = database.select_transaction(SQLITE_DATABASE_LOCATION, transaction_year, transaction_month)
     transaction_table = PrettyTable()
     transaction_table.field_names = ["ID", "Date Posted", "Name", "Amount", "Budget Category"]
     transaction_table.add_rows(transactions)
     print(transaction_table)
+
+
+@app.command()
+def show_budgets(budget_year: int, budget_month: int):
+    budgets = database.select_budget(SQLITE_DATABASE_LOCATION, budget_year, budget_month)
+    budgets_table = PrettyTable()
+    budgets_table.field_names = ["Group", "Category", "Year", "Month", "Budget", "Actual"]
+    budgets_table.add_rows(budgets)
+    print(budgets_table)
 
 
 if __name__ == "__main__":
