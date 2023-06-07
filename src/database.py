@@ -1,5 +1,5 @@
 from os.path import join
-from sqlite3 import PARSE_COLNAMES, PARSE_DECLTYPES, connect
+from sqlite3 import connect
 
 from constants import (
     SQL_CREATE_BUDGET_TABLE,
@@ -13,7 +13,6 @@ from constants import (
     SQL_SELECT_TRANSACTIONS,
     SQLITE_DATABASE_LOCATION,
 )
-from data_classes import statement_transaction
 
 
 def connect_to_database(database_file=SQLITE_DATABASE_LOCATION):
@@ -44,11 +43,11 @@ def insert_transactions(database_location, transactions):
     database_connection = connect_to_database(database_location)
     database_cursor = database_connection.cursor()
 
-    INSERT_STATEMENT = read_sql_file(SQL_INSERT_TRANSACTION)
+    insert_statement = read_sql_file(SQL_INSERT_TRANSACTION)
     changed_months = set()
     for transaction in transactions:
         database_cursor.execute(
-            INSERT_STATEMENT,
+            insert_statement,
             [
                 transaction.trntype,
                 transaction.dtposted,
@@ -64,11 +63,11 @@ def insert_transactions(database_location, transactions):
     return changed_months
 
 
-def transaction_unique(fitid):
+def transaction_unique(financial_institution_id):
     con = connect_to_database()
     cur = con.cursor()
     try:
-        res = cur.execute(read_sql_file(SQL_TRANSACTION_UNIQUE_FITID), [fitid])
+        res = cur.execute(read_sql_file(SQL_TRANSACTION_UNIQUE_FITID), [financial_institution_id])
     except:
         return True
     if res.fetchone() is None:

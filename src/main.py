@@ -1,12 +1,8 @@
-from os.path import join
-from decimal import Decimal
-
 import typer
 from prettytable import PrettyTable
 
 import database
 import files
-from data_classes import statement_transaction
 from constants import SQLITE_DATABASE_LOCATION
 
 app = typer.Typer()
@@ -26,6 +22,7 @@ def import_transactions(ofx_file: str):
     )
 
     database.update_category(SQLITE_DATABASE_LOCATION, inserted_months)
+
 
 @app.command()
 def show_transactions(transaction_year: int, transaction_month: int):
