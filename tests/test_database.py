@@ -9,7 +9,7 @@ from src.database import (
     connect_to_database,
     create_database_if_not_exists,
     update_category,
-    select_transactions
+    select_transaction
 )
 from src.files import read_ofx_transactions_file
 
@@ -206,7 +206,7 @@ def test_select_transactions():
     database_connection.close()
 
     # Act
-    result_set = select_transactions(TEST_DB_FILE_LOCATION, 2023, 4)
+    result_set = select_transaction(TEST_DB_FILE_LOCATION, 2023, 4)
 
     # Assert
     assert len(result_set) == 3
