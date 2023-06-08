@@ -7,10 +7,11 @@ x store budget by month in sqlite
 x improve database schema (3nf)
 x unit tests for sqlite operations
 x remove redundant files and folders
-- categorise a transaction by generic_name
+x categorise a transaction by generic_name
 - handle duplicate transaction inserts
 - add key constraints for transaction category and handle exceptions
 - add new budget categories
+- add budget values
 - add readme.md
 - package
 - first release
