@@ -6,10 +6,10 @@ x specify filename
 x store budget by month in sqlite
 x improve database schema (3nf)
 x unit tests for sqlite operations
-- store transactions maps in sqlite
+x remove redundant files and folders
+- categorise a transaction by generic_name
 - handle duplicate transaction inserts
-- store unknown transactions in sqlite
-- remove redundant files and folders
+- add new budget categories
 - add readme.md
 - package
 - first release

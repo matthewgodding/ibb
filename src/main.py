@@ -1,4 +1,8 @@
+from datetime import date
+
 import typer
+from typing import Optional
+from typing_extensions import Annotated
 from prettytable import PrettyTable
 
 import database
@@ -34,7 +38,8 @@ def show_transactions(transaction_year: int, transaction_month: int):
 
 
 @app.command()
-def show_budgets(budget_year: int, budget_month: int):
+def show_budgets(budget_year: Annotated[Optional[int], typer.Argument()] = date.today().year,
+                 budget_month: Annotated[Optional[int], typer.Argument()] = date.today().month):
     budgets = database.select_budget(SQLITE_DATABASE_LOCATION, budget_year, budget_month)
     budgets_table = PrettyTable()
     budgets_table.field_names = ["Group", "Category", "Year", "Month", "Budget", "Actual"]

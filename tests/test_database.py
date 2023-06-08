@@ -30,22 +30,16 @@ def test_update_budgets_calculates_correctly():
     database_cursor = database_connection.cursor()
     database_cursor.execute(
         """
-        INSERT INTO category (id, category_name) VALUES
-        (1, 'Groceries')
-        """
-    )
-    database_cursor.execute(
-        """
         INSERT INTO [transaction] (category_id, transaction_type, date_posted, transaction_amount, institution_id, generic_name) VALUES
-        (1, 'DEBIT', '2023-04-19 11:00:00+00:00', -20, 101010001110000, 'My First Transaction'),
-        (1, 'DEBIT', '2023-04-23 11:00:00+00:00', -30, 101010001120000, 'My Second Transaction'),
-        (1, 'DEBIT', '2023-05-03 11:00:00+00:00', -10, 101010001130000, 'My Third Transaction');
+        (5, 'DEBIT', '2023-04-19 11:00:00+00:00', -20, 101010001110000, 'My First Transaction'),
+        (5, 'DEBIT', '2023-04-23 11:00:00+00:00', -30, 101010001120000, 'My Second Transaction'),
+        (5, 'DEBIT', '2023-05-03 11:00:00+00:00', -10, 101010001130000, 'My Third Transaction');
         """
     )
     database_cursor.execute(
         """INSERT INTO budget (category_id, budget_year, budget_month, budget_amount) VALUES
-        (1, 2023, 4, 1150),
-        (1, 2023, 5, 1000);
+        (5, 2023, 4, 1150),
+        (5, 2023, 5, 1000);
         """
     )
     database_connection.commit()
@@ -131,15 +125,9 @@ def test_update_category_assigned():
     database_cursor = database_connection.cursor()
     database_cursor.execute(
         """
-        INSERT INTO category (id, category_name) VALUES
-        (1, 'Groceries')
-        """
-    )
-    database_cursor.execute(
-        """
         INSERT INTO transaction_category (category_id, generic_name) VALUES
-        (1, 'My Supermarket'),
-        (1, 'My Little Shop')
+        (5, 'My Supermarket'),
+        (5, 'My Little Shop')
         """
     )
     database_cursor.execute(
@@ -163,9 +151,9 @@ def test_update_category_assigned():
     database_connection.close()
 
     # Assert
-    assert result_set[0][0] == 1
+    assert result_set[0][0] == 5
     assert result_set[1][0] == None
-    assert result_set[2][0] == 1
+    assert result_set[2][0] == 5
 
 def test_select_transactions():
     # Arrange
@@ -183,15 +171,9 @@ def test_select_transactions():
     database_cursor = database_connection.cursor()
     database_cursor.execute(
         """
-        INSERT INTO category (id, category_name) VALUES
-        (1, 'Groceries')
-        """
-    )
-    database_cursor.execute(
-        """
         INSERT INTO transaction_category (category_id, generic_name) VALUES
-        (1, 'My Supermarket'),
-        (1, 'My Little Shop')
+        (5, 'My Supermarket'),
+        (5, 'My Little Shop')
         """
     )
     database_cursor.execute(

@@ -7,11 +7,13 @@ from constants import (
     SQL_CREATE_TRANSACTION_TABLE,
     SQL_CREATE_TRANSACTION_CATEGORY_TABLE,
     SQL_INSERT_TRANSACTION,
+    SQL_INSERT_CATEGORY_STANDING_DATA,
     SQL_TRANSACTION_UNIQUE_FITID,
     SQL_UPDATE_BUDGET,
     SQL_UPDATE_CATEGORY,
     SQL_SELECT_TRANSACTION,
     SQL_SELECT_BUDGET,
+    SQL_SELECT_CATEGORY_POPULATED,
     SQLITE_DATABASE_LOCATION,
 )
 
@@ -35,6 +37,11 @@ def create_database_if_not_exists(database_file=SQLITE_DATABASE_LOCATION):
     database_cursor.execute(read_sql_file(SQL_CREATE_BUDGET_TABLE))
     database_cursor.execute(read_sql_file(SQL_CREATE_CATEGORY_TABLE))
     database_cursor.execute(read_sql_file(SQL_CREATE_TRANSACTION_CATEGORY_TABLE))
+
+    database_cursor.execute(read_sql_file(SQL_SELECT_CATEGORY_POPULATED))
+    category_table_populated_check = database_cursor.fetchall()
+    if len(category_table_populated_check) == 0:
+        database_cursor.execute(read_sql_file(SQL_INSERT_CATEGORY_STANDING_DATA))
 
     database_connection.commit()
     database_connection.close()
