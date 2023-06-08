@@ -1,10 +1,10 @@
 UPDATE [transaction] AS t
 SET
-    category_id = c.category_id
+    category_id = c.id
 FROM
     (
         SELECT
-            category_id,
+            id,
             generic_name
         FROM
             transaction_category
