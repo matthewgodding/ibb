@@ -8,12 +8,13 @@ from constants import (
     SQL_CREATE_TRANSACTION_CATEGORY_TABLE,
     SQL_INSERT_TRANSACTION,
     SQL_INSERT_CATEGORY_STANDING_DATA,
-    SQL_TRANSACTION_UNIQUE_FITID,
+    SQL_SELECT_TRANSACTION_UNIQUE_FITID,
     SQL_UPDATE_BUDGET,
     SQL_UPDATE_CATEGORY,
     SQL_SELECT_TRANSACTION,
     SQL_SELECT_BUDGET,
     SQL_SELECT_CATEGORY_POPULATED,
+    SQL_INSERT_TRANSACTION_CATEGORY,
     SQLITE_DATABASE_LOCATION,
 )
 
@@ -75,7 +76,7 @@ def transaction_unique(financial_institution_id):
     con = connect_to_database()
     cur = con.cursor()
     try:
-        res = cur.execute(read_sql_file(SQL_TRANSACTION_UNIQUE_FITID), [financial_institution_id])
+        res = cur.execute(read_sql_file(SQL_SELECT_TRANSACTION_UNIQUE_FITID), [financial_institution_id])
     except:
         return True
     if res.fetchone() is None:
@@ -122,3 +123,14 @@ def update_category(database_location, months_to_update):
         database_cursor.execute(read_sql_file(SQL_UPDATE_CATEGORY), [year, month])
     database_connection.commit()
     database_connection.close()
+
+
+def insert_transaction_category_by_name(database_location, transaction_name, budget_category):
+    database_connection = connect_to_database(database_location)
+    database_cursor = database_connection.cursor()
+
+    database_cursor.execute(read_sql_file(SQL_INSERT_TRANSACTION_CATEGORY), [transaction_name, budget_category])
+
+    database_connection.commit()
+    database_connection.close()
+    return "succeeded"
