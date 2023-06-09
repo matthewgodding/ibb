@@ -91,7 +91,53 @@ def test_insert_transactions_compare_file_and_table():
     result_set = database_cursor_results.fetchall()
     database_connection_results.close()
 
-    remove(TEST_DB_FILE_LOCATION)
+    # Assert
+    assert len(result_set) == 2
+
+    assert inserted_months == {(2023, 4), (2023, 5)}
+
+    for idx, row in enumerate(result_set):
+        assert row[0] == ofx_file.statements[0].banktranlist[idx].trntype
+        assert (
+            datetime.fromisoformat(row[1])
+            == ofx_file.statements[0].banktranlist[idx].dtposted
+        )
+        assert Decimal(row[2] / 100) == ofx_file.statements[0].banktranlist[idx].trnamt
+        assert row[3] == ofx_file.statements[0].banktranlist[idx].fitid
+        assert row[4] == ofx_file.statements[0].banktranlist[idx].name
+        assert row[5] is None
+
+
+def test_insert_transactions_with_duplicates():
+    # Arrange
+    test_db_file_location = "test_insert_transactions_with_duplicates.sqlite"
+
+    # Always start with an empty db
+    try:
+        remove(test_db_file_location)
+    except OSError:
+        pass
+
+    create_database_if_not_exists(test_db_file_location)
+
+    ofx_file = read_ofx_transactions_file("tests/transactions.ofx")
+
+    # Act
+    inserted_months = insert_transactions(
+        test_db_file_location, ofx_file.statements[0].banktranlist
+    )
+    # 2nd import
+    inserted_months = insert_transactions(
+        test_db_file_location, ofx_file.statements[0].banktranlist
+    )
+
+    database_connection_results = connect_to_database(test_db_file_location)
+    database_cursor_results = database_connection_results.cursor()
+    database_cursor_results.execute(
+        "SELECT transaction_type, date_posted, transaction_amount, institution_id, generic_name, category_id FROM [transaction];"
+    )
+    result_set = database_cursor_results.fetchall()
+    database_connection_results.close()
 
     # Assert
     assert len(result_set) == 2
@@ -107,7 +153,8 @@ def test_insert_transactions_compare_file_and_table():
         assert Decimal(row[2] / 100) == ofx_file.statements[0].banktranlist[idx].trnamt
         assert row[3] == ofx_file.statements[0].banktranlist[idx].fitid
         assert row[4] == ofx_file.statements[0].banktranlist[idx].name
-        assert row[5] == None
+        assert row[5] is None
+
 
 def test_update_category_assigned():
     # Arrange

@@ -8,7 +8,6 @@ from constants import (
     SQL_CREATE_TRANSACTION_CATEGORY_TABLE,
     SQL_INSERT_TRANSACTION,
     SQL_INSERT_CATEGORY_STANDING_DATA,
-    SQL_SELECT_TRANSACTION_UNIQUE_FITID,
     SQL_UPDATE_BUDGET,
     SQL_UPDATE_CATEGORY,
     SQL_SELECT_TRANSACTION,
@@ -70,17 +69,6 @@ def insert_transactions(database_location, transactions):
     database_connection.commit()
     database_connection.close()
     return changed_months
-
-
-def transaction_unique(financial_institution_id):
-    con = connect_to_database()
-    cur = con.cursor()
-    try:
-        res = cur.execute(read_sql_file(SQL_SELECT_TRANSACTION_UNIQUE_FITID), [financial_institution_id])
-    except:
-        return True
-    if res.fetchone() is None:
-        return True
 
 
 def select_transaction(database_location, transaction_year, transaction_month):
