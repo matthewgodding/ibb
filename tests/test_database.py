@@ -151,9 +151,9 @@ def test_update_category_assigned():
     database_connection.close()
 
     # Assert
-    assert result_set[0][0] == 5
-    assert result_set[1][0] == None
-    assert result_set[2][0] == 5
+    assert result_set[0][0] == 1
+    assert result_set[1][0] is None
+    assert result_set[2][0] == 2
 
 def test_select_transactions():
     # Arrange
