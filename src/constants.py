@@ -26,7 +26,6 @@ SQL_INSERT_CATEGORY_STANDING_DATA = "insert_category_standing_data.sql"
 SQL_SELECT_TRANSACTION = "select_transactions.sql"
 SQL_SELECT_BUDGET = "select_budget.sql"
 SQL_SELECT_CATEGORY_POPULATED = "select_category_populated.sql"
-SQL_SELECT_TRANSACTION_UNIQUE_FITID = "select_transaction_unique_fitid.sql"
 SQL_INSERT_TRANSACTION_CATEGORY = "insert_transaction_category.sql"
 
 SQL_UPDATE_BUDGET = "update_budgets.sql"

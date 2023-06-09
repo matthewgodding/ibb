@@ -1,1 +1,0 @@
-SELECT fitid FROM [transaction] WHERE fitid = ?

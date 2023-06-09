@@ -1,3 +1,4 @@
+import sqlite3
 from os.path import join
 from sqlite3 import connect
 
@@ -8,7 +9,6 @@ from constants import (
     SQL_CREATE_TRANSACTION_CATEGORY_TABLE,
     SQL_INSERT_TRANSACTION,
     SQL_INSERT_CATEGORY_STANDING_DATA,
-    SQL_SELECT_TRANSACTION_UNIQUE_FITID,
     SQL_UPDATE_BUDGET,
     SQL_UPDATE_CATEGORY,
     SQL_SELECT_TRANSACTION,
@@ -54,33 +54,27 @@ def insert_transactions(database_location, transactions):
 
     insert_statement = read_sql_file(SQL_INSERT_TRANSACTION)
     changed_months = set()
+
     for transaction in transactions:
-        database_cursor.execute(
-            insert_statement,
-            [
-                transaction.trntype,
-                transaction.dtposted,
-                int(transaction.trnamt * 100),
-                transaction.fitid,
-                transaction.name,
-            ],
-        )
+        try:
+            database_cursor.execute(
+                insert_statement,
+                [
+                    transaction.trntype,
+                    transaction.dtposted,
+                    int(transaction.trnamt * 100),
+                    transaction.fitid,
+                    transaction.name,
+                ],
+            )
+        except sqlite3.IntegrityError as err:
+            print(f"{err.args} whilst inserting {transaction}" )
+
         changed_months.add((transaction.dtposted.year, transaction.dtposted.month))
 
     database_connection.commit()
     database_connection.close()
     return changed_months
-
-
-def transaction_unique(financial_institution_id):
-    con = connect_to_database()
-    cur = con.cursor()
-    try:
-        res = cur.execute(read_sql_file(SQL_SELECT_TRANSACTION_UNIQUE_FITID), [financial_institution_id])
-    except:
-        return True
-    if res.fetchone() is None:
-        return True
 
 
 def select_transaction(database_location, transaction_year, transaction_month):
