@@ -1,3 +1,4 @@
+import sqlite3
 from os.path import join
 from sqlite3 import connect
 
@@ -53,17 +54,22 @@ def insert_transactions(database_location, transactions):
 
     insert_statement = read_sql_file(SQL_INSERT_TRANSACTION)
     changed_months = set()
+
     for transaction in transactions:
-        database_cursor.execute(
-            insert_statement,
-            [
-                transaction.trntype,
-                transaction.dtposted,
-                int(transaction.trnamt * 100),
-                transaction.fitid,
-                transaction.name,
-            ],
-        )
+        try:
+            database_cursor.execute(
+                insert_statement,
+                [
+                    transaction.trntype,
+                    transaction.dtposted,
+                    int(transaction.trnamt * 100),
+                    transaction.fitid,
+                    transaction.name,
+                ],
+            )
+        except sqlite3.IntegrityError as err:
+            print(f"{err.args} whilst inserting {transaction}" )
+
         changed_months.add((transaction.dtposted.year, transaction.dtposted.month))
 
     database_connection.commit()
