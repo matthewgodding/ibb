@@ -9,7 +9,8 @@ from src.database import (
     connect_to_database,
     create_database_if_not_exists,
     update_category,
-    select_transaction
+    select_transaction,
+    insert_transaction_category_by_name
 )
 from src.files import read_ofx_transactions_file
 
@@ -201,6 +202,52 @@ def test_update_category_assigned():
     assert result_set[0][0] == 1
     assert result_set[1][0] is None
     assert result_set[2][0] == 2
+
+
+def test_insert_transaction_category_by_name_incorrectly():
+    # Arrange
+    test_db_file_location = "test_update_category_assigned_incorrectly.sqlite"
+
+    # Always start with an empty db
+    try:
+        remove(test_db_file_location)
+    except OSError:
+        pass
+
+    create_database_if_not_exists(test_db_file_location)
+
+    database_connection = connect(test_db_file_location)
+    database_cursor = database_connection.cursor()
+    database_cursor.execute(
+        """
+        INSERT INTO [transaction] (id, transaction_type, date_posted, transaction_amount, institution_id, generic_name) VALUES
+        (1, 'DEBIT', '2023-04-03 11:00:00+00:00', -20, 101010001110000, 'My Supermarket'),
+        (2, 'DEBIT', '2023-04-19 11:00:00+00:00', -30, 101010001120000, 'My Fuel Station'),
+        (3, 'DEBIT', '2023-04-23 11:00:00+00:00', -10, 101010001130000, 'My Little Shop');
+        """
+    )
+    database_connection.commit()
+    database_connection.close()
+
+    # Act
+    # Missing generic_name
+    insert_transaction_category_by_name(test_db_file_location, "My Cafe", "Food")
+
+    # Missing category name
+    insert_transaction_category_by_name(test_db_file_location, "My Supermarket", "Eating")
+
+    # Both missing
+    insert_transaction_category_by_name(test_db_file_location, "My Pharmacy", "Medical")
+
+    database_connection_results = connect(test_db_file_location)
+    database_cursor_results = database_connection_results.cursor()
+    database_cursor_results.execute("SELECT COUNT(*) FROM transaction_category;")
+    result_set = database_cursor_results.fetchall()
+    database_connection.close()
+
+    # Assert
+    assert result_set[0][0] == 0
+
 
 def test_select_transactions():
     # Arrange

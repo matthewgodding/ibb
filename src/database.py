@@ -20,7 +20,9 @@ from constants import (
 
 
 def connect_to_database(database_file=SQLITE_DATABASE_LOCATION):
-    return connect(database_file)
+    database_connection = connect(database_file)
+    database_connection.execute("PRAGMA foreign_keys = 1;")
+    return database_connection
 
 
 def read_sql_file(sql_file):
