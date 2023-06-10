@@ -289,4 +289,4 @@ def test_insert_transaction_category_by_name_incorrectly():
     # Assert
     assert result_set[0][0] == 0
 
-    assert result1 == "failed as budget category does not exist"
+    assert result1 == "failed. Either the transaction name or category are incorrect"

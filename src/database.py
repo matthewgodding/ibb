@@ -129,7 +129,7 @@ def insert_transaction_category_by_name(database_location, transaction_name, bud
         database_cursor.execute(read_sql_file(SQL_INSERT_TRANSACTION_CATEGORY), [transaction_name, budget_category])
     except sqlite3.OperationalError as err:
         if err.args[0] == 'foreign key mismatch - "transaction_category" referencing "transaction"':
-            result = "failed as budget category does not exist"
+            result = "failed. Either the transaction name or category are incorrect"
         else:
             result = "succeeded"
     else:
