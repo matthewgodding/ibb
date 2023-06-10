@@ -9,7 +9,7 @@ x unit tests for sqlite operations
 x remove redundant files and folders
 x categorise a transaction by generic_name
 x handle duplicate transaction inserts
-- add key constraints for transaction category and handle exceptions
+x add key constraints for transaction category and handle exceptions
 - add new budget categories
 - add budget values
 - add readme.md
@@ -19,3 +19,4 @@ x handle duplicate transaction inserts
 - add logging
 - add GUI
 - import multiple files
+- more detailed feedback on inserting incorrect transaction categories

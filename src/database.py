@@ -20,7 +20,9 @@ from constants import (
 
 
 def connect_to_database(database_file=SQLITE_DATABASE_LOCATION):
-    return connect(database_file)
+    database_connection = connect(database_file)
+    database_connection.execute("PRAGMA foreign_keys = 1;")
+    return database_connection
 
 
 def read_sql_file(sql_file):
@@ -68,7 +70,7 @@ def insert_transactions(database_location, transactions):
                 ],
             )
         except sqlite3.IntegrityError as err:
-            print(f"{err.args} whilst inserting {transaction}" )
+            print(f"{err.args} whilst inserting {transaction}")
 
         changed_months.add((transaction.dtposted.year, transaction.dtposted.month))
 
@@ -123,8 +125,16 @@ def insert_transaction_category_by_name(database_location, transaction_name, bud
     database_connection = connect_to_database(database_location)
     database_cursor = database_connection.cursor()
 
-    database_cursor.execute(read_sql_file(SQL_INSERT_TRANSACTION_CATEGORY), [transaction_name, budget_category])
+    try:
+        database_cursor.execute(read_sql_file(SQL_INSERT_TRANSACTION_CATEGORY), [transaction_name, budget_category])
+    except sqlite3.OperationalError as err:
+        if err.args[0] == 'foreign key mismatch - "transaction_category" referencing "transaction"':
+            result = "failed. Either the transaction name or category are incorrect"
+        else:
+            result = "succeeded"
+    else:
+        raise
 
     database_connection.commit()
     database_connection.close()
-    return "succeeded"
+    return result

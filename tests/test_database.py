@@ -9,7 +9,8 @@ from src.database import (
     connect_to_database,
     create_database_if_not_exists,
     update_category,
-    select_transaction
+    select_transaction,
+    insert_transaction_category_by_name
 )
 from src.files import read_ofx_transactions_file
 
@@ -202,19 +203,20 @@ def test_update_category_assigned():
     assert result_set[1][0] is None
     assert result_set[2][0] == 2
 
+
 def test_select_transactions():
     # Arrange
-    TEST_DB_FILE_LOCATION = "test_select_transactions.sqlite"
+    test_db_file_location = "test_select_transactions.sqlite"
 
     # Always start with an empty db
     try:
-        remove(TEST_DB_FILE_LOCATION)
+        remove(test_db_file_location)
     except OSError:
         pass
 
-    create_database_if_not_exists(TEST_DB_FILE_LOCATION)
+    create_database_if_not_exists(test_db_file_location)
 
-    database_connection = connect(TEST_DB_FILE_LOCATION)
+    database_connection = connect(test_db_file_location)
     database_cursor = database_connection.cursor()
     database_cursor.execute(
         """
@@ -235,7 +237,56 @@ def test_select_transactions():
     database_connection.close()
 
     # Act
-    result_set = select_transaction(TEST_DB_FILE_LOCATION, 2023, 4)
+    result_set = select_transaction(test_db_file_location, 2023, 4)
 
     # Assert
     assert len(result_set) == 3
+
+
+def test_insert_transaction_category_by_name_incorrectly():
+    # TODO: identify scenario 2 and 3
+    # TODO: add successful test
+    # Arrange
+    test_db_file_location = "test_update_category_assigned_incorrectly.sqlite"
+
+    # Always start with an empty db
+    try:
+        remove(test_db_file_location)
+    except OSError:
+        pass
+
+    create_database_if_not_exists(test_db_file_location)
+
+    database_connection = connect(test_db_file_location)
+    database_cursor = database_connection.cursor()
+    database_cursor.execute(
+        """
+        INSERT INTO [transaction] (id, transaction_type, date_posted, transaction_amount, institution_id, generic_name) VALUES
+        (1, 'DEBIT', '2023-04-03 11:00:00+00:00', -20, 101010001110000, 'My Supermarket'),
+        (2, 'DEBIT', '2023-04-19 11:00:00+00:00', -30, 101010001120000, 'My Fuel Station'),
+        (3, 'DEBIT', '2023-04-23 11:00:00+00:00', -10, 101010001130000, 'My Little Shop');
+        """
+    )
+    database_connection.commit()
+    database_connection.close()
+
+    # Act
+    # Missing generic_name
+    result1 = insert_transaction_category_by_name(test_db_file_location, "My Cafe", "Food")
+
+    # Missing category name
+    result2 = insert_transaction_category_by_name(test_db_file_location, "My Supermarket", "Eating")
+
+    # Both missing
+    result3 = insert_transaction_category_by_name(test_db_file_location, "My Pharmacy", "Medical")
+
+    database_connection_results = connect(test_db_file_location)
+    database_cursor_results = database_connection_results.cursor()
+    database_cursor_results.execute("SELECT COUNT(*) FROM transaction_category;")
+    result_set = database_cursor_results.fetchall()
+    database_connection.close()
+
+    # Assert
+    assert result_set[0][0] == 0
+
+    assert result1 == "failed. Either the transaction name or category are incorrect"
