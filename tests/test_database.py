@@ -326,3 +326,59 @@ def test_add_category():
     assert len(result_set) == 1
     assert result_set[0][0] == "Pet Supplies"
     assert result_set[0][1] == 1
+
+
+def test_add_category_parent():
+    # Arrange
+    test_db_file_location = "test_add_category_parent.sqlite"
+
+    # Always start with an empty db
+    try:
+        remove(test_db_file_location)
+    except OSError:
+        pass
+
+    create_database_if_not_exists(test_db_file_location)
+
+    # Act
+    result = add_category(test_db_file_location, "Bills", None)
+
+    database_connection_results = connect(test_db_file_location)
+    database_cursor_results = database_connection_results.cursor()
+    database_cursor_results.execute("""
+        SELECT category_name, category_group_id FROM category WHERE category_name = "Bills";
+        """)
+    result_set = database_cursor_results.fetchall()
+    database_connection_results.close()
+
+    # Assert
+    assert len(result_set) == 1
+    assert result_set[0][0] == "Bills"
+    assert result_set[0][1] is None
+
+
+def test_add_category_incorrect_parent():
+    # Arrange
+    test_db_file_location = "test_add_category_incorrect_parent.sqlite"
+
+    # Always start with an empty db
+    try:
+        remove(test_db_file_location)
+    except OSError:
+        pass
+
+    create_database_if_not_exists(test_db_file_location)
+
+    # Act
+    result = add_category(test_db_file_location, "Energy Bills", "Need It")
+
+    database_connection_results = connect(test_db_file_location)
+    database_cursor_results = database_connection_results.cursor()
+    database_cursor_results.execute("""
+        SELECT category_name, category_group_id FROM category WHERE category_name = "Energy Bills";
+        """)
+    result_set = database_cursor_results.fetchall()
+    database_connection_results.close()
+
+    # Assert
+    assert len(result_set) == 0
