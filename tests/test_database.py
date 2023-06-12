@@ -8,9 +8,10 @@ from src.database import (
     insert_transactions,
     connect_to_database,
     create_database_if_not_exists,
-    update_category,
+    update_transaction_category,
     select_transaction,
-    insert_transaction_category_by_name
+    insert_transaction_category_by_name,
+    add_category,
 )
 from src.files import read_ofx_transactions_file
 
@@ -157,19 +158,19 @@ def test_insert_transactions_with_duplicates():
         assert row[5] is None
 
 
-def test_update_category_assigned():
+def test_update_transaction_category_assigned():
     # Arrange
-    TEST_DB_FILE_LOCATION = "test_update_category_assigned.sqlite"
+    test_db_file_location = "test_update_transaction_category_assigned.sqlite"
 
     # Always start with an empty db
     try:
-        remove(TEST_DB_FILE_LOCATION)
+        remove(test_db_file_location)
     except OSError:
         pass
 
-    create_database_if_not_exists(TEST_DB_FILE_LOCATION)
+    create_database_if_not_exists(test_db_file_location)
 
-    database_connection = connect(TEST_DB_FILE_LOCATION)
+    database_connection = connect(test_db_file_location)
     database_cursor = database_connection.cursor()
     database_cursor.execute(
         """
@@ -190,11 +191,13 @@ def test_update_category_assigned():
     database_connection.close()
 
     # Act
-    update_category(TEST_DB_FILE_LOCATION, [("2023","4")])
+    update_transaction_category(test_db_file_location, [("2023", "4")])
 
-    database_connection_results = connect(TEST_DB_FILE_LOCATION)
+    database_connection_results = connect(test_db_file_location)
     database_cursor_results = database_connection_results.cursor()
-    database_cursor_results.execute("SELECT category_id FROM [transaction] ORDER BY id;")
+    database_cursor_results.execute(
+        "SELECT category_id FROM [transaction] ORDER BY id;"
+    )
     result_set = database_cursor_results.fetchall()
     database_connection.close()
 
@@ -244,8 +247,6 @@ def test_select_transactions():
 
 
 def test_insert_transaction_category_by_name_incorrectly():
-    # TODO: identify scenario 2 and 3
-    # TODO: add successful test
     # Arrange
     test_db_file_location = "test_update_category_assigned_incorrectly.sqlite"
 
@@ -272,21 +273,56 @@ def test_insert_transaction_category_by_name_incorrectly():
 
     # Act
     # Missing generic_name
-    result1 = insert_transaction_category_by_name(test_db_file_location, "My Cafe", "Food")
+    result1 = insert_transaction_category_by_name(
+        test_db_file_location, "My Cafe", "Food"
+    )
 
     # Missing category name
-    result2 = insert_transaction_category_by_name(test_db_file_location, "My Supermarket", "Eating")
+    result2 = insert_transaction_category_by_name(
+        test_db_file_location, "My Supermarket", "Eating"
+    )
 
     # Both missing
-    result3 = insert_transaction_category_by_name(test_db_file_location, "My Pharmacy", "Medical")
+    result3 = insert_transaction_category_by_name(
+        test_db_file_location, "My Pharmacy", "Medical"
+    )
 
     database_connection_results = connect(test_db_file_location)
     database_cursor_results = database_connection_results.cursor()
     database_cursor_results.execute("SELECT COUNT(*) FROM transaction_category;")
     result_set = database_cursor_results.fetchall()
-    database_connection.close()
+    database_connection_results.close()
 
     # Assert
     assert result_set[0][0] == 0
 
     assert result1 == "failed. Either the transaction name or category are incorrect"
+
+
+def test_add_category():
+    # Arrange
+    test_db_file_location = "test_add_category.sqlite"
+
+    # Always start with an empty db
+    try:
+        remove(test_db_file_location)
+    except OSError:
+        pass
+
+    create_database_if_not_exists(test_db_file_location)
+
+    # Act
+    result = add_category(test_db_file_location, "Pet Supplies", "Need")
+
+    database_connection_results = connect(test_db_file_location)
+    database_cursor_results = database_connection_results.cursor()
+    database_cursor_results.execute("""
+        SELECT category_name, category_group_id FROM category WHERE category_name = "Pet Supplies";
+        """)
+    result_set = database_cursor_results.fetchall()
+    database_connection_results.close()
+
+    # Assert
+    assert len(result_set) == 1
+    assert result_set[0][0] == "Pet Supplies"
+    assert result_set[0][1] == 1

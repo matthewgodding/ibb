@@ -22,6 +22,7 @@ SQL_CREATE_TRANSACTION_CATEGORY_TABLE = "create_transaction_category_table.sql"
 
 SQL_INSERT_TRANSACTION = "insert_transactions.sql"
 SQL_INSERT_CATEGORY_STANDING_DATA = "insert_category_standing_data.sql"
+SQL_INSERT_CATEGORY = "insert_category.sql"
 
 SQL_SELECT_TRANSACTION = "select_transactions.sql"
 SQL_SELECT_BUDGET = "select_budget.sql"
@@ -29,4 +30,7 @@ SQL_SELECT_CATEGORY_POPULATED = "select_category_populated.sql"
 SQL_INSERT_TRANSACTION_CATEGORY = "insert_transaction_category.sql"
 
 SQL_UPDATE_BUDGET = "update_budgets.sql"
-SQL_UPDATE_CATEGORY = "update_category.sql"
+SQL_UPDATE_TRANSACTION_CATEGORY = "update_transaction_category.sql"
+SQL_UPDATE_CATEGORY_NAME = "update_category.sql"
+
+SQL_DELETE_CATEGORY = "delete_category.sql"
