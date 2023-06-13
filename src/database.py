@@ -35,6 +35,15 @@ def read_sql_file(sql_file):
     return sql_statement
 
 
+def execute_sql(database_location, sql_file, require_results, *sql_parameters):
+    with connect_to_database(database_location) as database_connection:
+        database_cursor = database_connection.cursor()
+        database_cursor.execute(read_sql_file(sql_file), sql_parameters)
+        database_connection.commit()
+        if require_results:
+            return database_cursor.fetchall()
+
+
 def create_database_if_not_exists(database_file=SQLITE_DATABASE_LOCATION):
     database_connection = connect_to_database(database_file)
     database_cursor = database_connection.cursor()
