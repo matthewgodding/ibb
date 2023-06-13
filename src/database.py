@@ -92,51 +92,34 @@ def insert_transactions(database_location, transactions):
 
 
 def select_transaction(database_location, transaction_year, transaction_month):
-    database_connection = connect_to_database(database_location)
-    database_cursor = database_connection.cursor()
-
-    database_cursor.execute(
-        read_sql_file(SQL_SELECT_TRANSACTION),
-        [str(transaction_year), str(transaction_month)],
+    return execute_sql(
+        database_location,
+        SQL_SELECT_TRANSACTION,
+        True,
+        str(transaction_year),
+        str(transaction_month),
     )
-    result_set = database_cursor.fetchall()
-    database_connection.close()
-
-    return result_set
 
 
 def select_budget(database_location, transaction_year, transaction_month):
-    database_connection = connect_to_database(database_location)
-    database_cursor = database_connection.cursor()
-
-    database_cursor.execute(
-        read_sql_file(SQL_SELECT_BUDGET),
-        [str(transaction_year), str(transaction_month)],
+    return execute_sql(
+        database_location,
+        SQL_SELECT_BUDGET,
+        True,
+        str(transaction_year),
+        str(transaction_month),
     )
-    result_set = database_cursor.fetchall()
-    database_connection.close()
-
-    return result_set
 
 
 def update_budgets(database_location, budget_year, budget_month):
-    database_connection = connect_to_database(database_location)
-    database_cursor = database_connection.cursor()
-    database_cursor.execute(
-        read_sql_file(SQL_UPDATE_BUDGET), [budget_year, budget_month]
-    )
-    database_connection.commit()
-    database_connection.close()
+    execute_sql(database_location, SQL_UPDATE_BUDGET, False, budget_year, budget_month)
 
 
 def update_transaction_category(database_location, months_to_update):
-    database_connection = connect_to_database(database_location)
-    database_cursor = database_connection.cursor()
-
     for year, month in months_to_update:
-        database_cursor.execute(read_sql_file(SQL_UPDATE_TRANSACTION_CATEGORY), [year, month])
-    database_connection.commit()
-    database_connection.close()
+        execute_sql(
+            database_location, SQL_UPDATE_TRANSACTION_CATEGORY, False, year, month
+        )
 
 
 def insert_transaction_category_by_name(
@@ -166,15 +149,19 @@ def insert_transaction_category_by_name(
     return result
 
 
+def category_exists(database_location, category_name):
+    return True
+
+
+def category_is_top_level(database_location, category_name):
+    return True
+
+
 def add_category(database_location, category_name, parent_category_name=None):
-    database_connection = connect_to_database(database_location)
-    database_cursor = database_connection.cursor()
-
-    query_result = database_cursor.execute(
-        read_sql_file(SQL_INSERT_CATEGORY),
-        [parent_category_name, category_name],
+    execute_sql(
+        database_location,
+        SQL_INSERT_CATEGORY,
+        False,
+        parent_category_name,
+        category_name,
     )
-
-    database_connection.commit()
-    database_connection.close()
-    return query_result
