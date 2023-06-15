@@ -18,17 +18,17 @@ from src.files import read_ofx_transactions_file
 
 def test_update_budgets_calculates_correctly():
     # Arrange
-    TEST_DB_FILE_LOCATION = "test_update_budgets_calculates_correctly.sqlite"
+    test_db_file_location = "test_update_budgets_calculates_correctly.sqlite"
 
     # Always start with an empty db
     try:
-        remove(TEST_DB_FILE_LOCATION)
+        remove(test_db_file_location)
     except OSError:
         pass
 
-    create_database_if_not_exists(TEST_DB_FILE_LOCATION)
+    create_database_if_not_exists(test_db_file_location)
 
-    database_connection = connect(TEST_DB_FILE_LOCATION)
+    database_connection = connect(test_db_file_location)
     database_cursor = database_connection.cursor()
     database_cursor.execute(
         """
@@ -48,9 +48,9 @@ def test_update_budgets_calculates_correctly():
     database_connection.close()
 
     # Act
-    update_budgets(TEST_DB_FILE_LOCATION, 2023, 4)
+    update_budgets(test_db_file_location, 2023, 4)
 
-    database_connection_results = connect(TEST_DB_FILE_LOCATION)
+    database_connection_results = connect(test_db_file_location)
     database_cursor_results = database_connection_results.cursor()
     database_cursor_results.execute("SELECT budget_month, actual_amount FROM budget;")
     result_set = database_cursor_results.fetchall()
