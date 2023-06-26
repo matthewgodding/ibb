@@ -3,6 +3,8 @@ from sqlite3 import connect
 from datetime import datetime
 from decimal import Decimal
 
+import pytest
+
 from src.database import (
     update_budgets,
     insert_transactions,
@@ -316,9 +318,11 @@ def test_add_category():
 
     database_connection_results = connect(test_db_file_location)
     database_cursor_results = database_connection_results.cursor()
-    database_cursor_results.execute("""
+    database_cursor_results.execute(
+        """
         SELECT category_name, category_group_id FROM category WHERE category_name = "Pet Supplies";
-        """)
+        """
+    )
     result_set = database_cursor_results.fetchall()
     database_connection_results.close()
 
@@ -345,9 +349,11 @@ def test_add_category_parent():
 
     database_connection_results = connect(test_db_file_location)
     database_cursor_results = database_connection_results.cursor()
-    database_cursor_results.execute("""
+    database_cursor_results.execute(
+        """
         SELECT category_name, category_group_id FROM category WHERE category_name = "Bills";
-        """)
+        """
+    )
     result_set = database_cursor_results.fetchall()
     database_connection_results.close()
 
@@ -370,15 +376,8 @@ def test_add_category_incorrect_parent():
     create_database_if_not_exists(test_db_file_location)
 
     # Act
-    result = add_category(test_db_file_location, "Energy Bills", "Need It")
-
-    database_connection_results = connect(test_db_file_location)
-    database_cursor_results = database_connection_results.cursor()
-    database_cursor_results.execute("""
-        SELECT category_name, category_group_id FROM category WHERE category_name = "Energy Bills";
-        """)
-    result_set = database_cursor_results.fetchall()
-    database_connection_results.close()
+    with pytest.raises(Exception) as exception_info:
+        add_category(test_db_file_location, "Energy Bills", "Need It")
 
     # Assert
-    assert len(result_set) == 0
+    assert exception_info.value.args[0] == "Invalid top level category"

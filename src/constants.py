@@ -26,7 +26,8 @@ SQL_INSERT_CATEGORY = "insert_category.sql"
 
 SQL_SELECT_TRANSACTION = "select_transactions.sql"
 SQL_SELECT_BUDGET = "select_budget.sql"
-SQL_SELECT_CATEGORY_POPULATED = "select_category_populated.sql"
+SQL_SELECT_CATEGORY = "select_category.sql"
+SQL_SELECT_CATEGORY_POPULATED = "select_category_table_populated.sql"
 SQL_INSERT_TRANSACTION_CATEGORY = "insert_transaction_category.sql"
 
 SQL_UPDATE_BUDGET = "update_budgets.sql"

@@ -15,6 +15,7 @@ from constants import (
     SQL_UPDATE_CATEGORY_NAME,
     SQL_SELECT_TRANSACTION,
     SQL_SELECT_BUDGET,
+    SQL_SELECT_CATEGORY,
     SQL_SELECT_CATEGORY_POPULATED,
     SQL_INSERT_TRANSACTION_CATEGORY,
     SQL_DELETE_CATEGORY,
@@ -150,14 +151,43 @@ def insert_transaction_category_by_name(
 
 
 def category_exists(database_location, category_name):
-    return True
+    result_set = execute_sql(
+        database_location,
+        SQL_SELECT_CATEGORY_POPULATED,
+        True,
+        category_name,
+    )
+
+    if len(result_set) == 1:
+        return True
+    else:
+        return False
 
 
-def category_is_top_level(database_location, category_name):
-    return True
+def category_is_valid_top_level(database_location, category_name):
+    result_set = execute_sql(
+        database_location,
+        SQL_SELECT_CATEGORY,
+        True,
+        category_name,
+    )
+
+    if len(result_set) == 1:
+        if result_set[0][1] is None:
+            return True
+        else:
+            return False
+    else:
+        return False
 
 
 def add_category(database_location, category_name, parent_category_name=None):
+    # No parent category means this is a top level category
+    if parent_category_name is not None:
+        # This must be a sub category (not top level), is the parent valid?
+        if not category_is_valid_top_level(database_location, parent_category_name):
+            raise Exception("Invalid top level category")
+
     execute_sql(
         database_location,
         SQL_INSERT_CATEGORY,
