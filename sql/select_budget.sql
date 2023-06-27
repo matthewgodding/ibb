@@ -7,3 +7,4 @@ SELECT mc.category_name
 FROM category AS c
 JOIN category AS mc on c.category_group_id = mc.id
 LEFT OUTER JOIN budget AS b ON b.category_id = c.id AND b.budget_year = ? AND b.budget_month = ?
+ORDER BY mc.id, c.category_name
