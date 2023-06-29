@@ -11,7 +11,9 @@ x categorise a transaction by generic_name
 x handle duplicate transaction inserts
 x add key constraints for transaction category and handle exceptions
 - add new budget categories
-- add budget values
+- update budget values
+- remove budget categories
+- change budget categories
 - add readme.md
 - package
 - first release
