@@ -10,18 +10,9 @@ from constants import (
 )
 
 
-def validate_folder_structure():
+def create_folders_if_not_exists():
     if not path.isdir(DATA_STORE_PATH):
         mkdir(DATA_STORE_PATH)
-
-    if not path.isdir(INPUT_FILES_PATH):
-        mkdir(INPUT_FILES_PATH)
-
-    if not path.isdir(TRANSACTIONS_FILES_PATH):
-        mkdir(TRANSACTIONS_FILES_PATH)
-
-    if not path.isdir(BUDGETS_FILES_PATH):
-        mkdir(BUDGETS_FILES_PATH)
 
 
 def read_ofx_transactions_file(ofx_file):

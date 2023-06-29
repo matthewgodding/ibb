@@ -13,7 +13,6 @@ app.add_typer(budget.app, name="budget")
 
 
 if __name__ == "__main__":
-    files.validate_folder_structure()
+    files.create_folders_if_not_exists()
     database.create_database_if_not_exists()
-
     app()
